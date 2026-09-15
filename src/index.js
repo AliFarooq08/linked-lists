@@ -16,7 +16,7 @@ class LinkedList {
                 currentNode = currentNode.nextNode
             }
             currentNode.nextNode = new Node(value)
-            this.tail = currentNode
+            this.tail = currentNode.nextNode
             this.nodeCount++
         }
         return this.nodes
@@ -27,7 +27,6 @@ class LinkedList {
             this.head = this.nodes
             this.nodeCount++
         } else {
-            console.log(`Dev: ${this.tail.value}`)
             this.nodes = new Node(value, this.head)
             let currentNode = this.nodes
             currentNode.nextNode = this.head
@@ -43,7 +42,7 @@ class LinkedList {
         return this.head.value
     }
     getTail() {
-        return this.head.value
+        return this.tail.value
     }
     at(index) {
         let currentNode = this.nodes
@@ -102,15 +101,14 @@ class LinkedList {
         }
         tempString += "(null)"
 
-        console.log(tempString)
+        return tempString
     }
     insertAt(index, ...values) {
-        
+
     }
     removeAt(index) {
 
     }
-
 }
 class Node {
     constructor(value, nextNode = null) {
