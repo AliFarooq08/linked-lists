@@ -51,28 +51,47 @@ class LinkedList {
             if (currentNode.nextNode !== null) {
                 currentNode = currentNode.nextNode 
             } else {
-                throw new Error(`Index must be between 0 and ${this.nodeCount - 1}, but entered ${index}.`)
+                console.error(`Index must be between 0 and ${this.nodeCount - 1}, but entered ${index}.`)
             }
         }
         return currentNode.value
+        
     }
     pop() {
-        if (nodeCount === 0) {
-            throw new Error("Can't pop empty linked list!")
+        if (this.nodeCount === 0) {
+            return undefined
         } else {
-            let currentNode = this.nodes
-            for (let i = 1; i < this.nodeCount - 1; i++) {
-                currentNode = currentNode.nextNode
-            }
-            currentNode.nextNode = null
-            
+            let removedNode = this.nodes.value
+            this.nodes = this.nodes.nextNode
+            return this.nodes
         }
+        
     }
     contains(value) {
-
+        let currentNode = this.nodes
+        let found = false
+        for (let i = 0; i < this.nodeCount - 1; i++) {
+            if (currentNode.value === value && found == false) {
+                found = true
+            } else if (found == false) {
+                currentNode = currentNode.nextNode
+            }
+        }
+        return found
     }
     findIndex(value) {
-        
+        let currentNode = this.nodes
+        let found = false
+        let index = -1
+        for (let i = 0; i < this.nodeCount - 1; i++) {
+            if (currentNode.value === value & found == false) {
+                index = i 
+                found = true
+            } else if (found == false) {
+                currentNode = currentNode.nextNode
+            }
+        }
+        return index
     }
     toString() {
         let tempString = ``
@@ -86,7 +105,7 @@ class LinkedList {
         console.log(tempString)
     }
     insertAt(index, ...values) {
-
+        
     }
     removeAt(index) {
 
@@ -111,8 +130,12 @@ console.log(`List Size: ${list.size()}`)
 console.log(`Current Head: ${list.getHead()}`)
 console.log(`Current tail: ${list.getTail()}`)
 console.log("")
-console.log(list.at(0))
-console.log(list.at(4))
-console.log(list.at(5))
+console.log(`List item at index 0: ${list.at(0)}`)
+console.log(`List item at index 4: ${list.at(4)}`)
+console.log(`List item at index 5: ${list.at(5)}`)
 list.pop()
 console.log(list.toString())
+console.log(`List contains I?: ${list.contains("I")}`)
+console.log(`List contains Me?: ${list.contains("Me")}`)
+console.log(`Get index of I: ${list.findIndex("I")}`)
+console.log(`Get index of Hello: ${list.findIndex   ("Hello")}`)
