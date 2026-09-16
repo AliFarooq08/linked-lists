@@ -5,9 +5,15 @@ class LinkedList {
         this.nodes = {}
         this.nodeCount = 0;
     }
+    static Node = class {
+        constructor(value, nextNode = null) {
+            this.value = value;
+            this.nextNode = nextNode;
+        }
+    };
     append(value) {
         if (this.nodeCount === 0) {
-            this.nodes = new Node(value)
+            this.nodes = new LinkedList.Node(value)
             this.head = this.nodes
             this.nodeCount++
         } else {
@@ -15,7 +21,7 @@ class LinkedList {
             for (let i = 0; i < this.nodeCount - 1; i++) {
                 currentNode = currentNode.nextNode
             }
-            currentNode.nextNode = new Node(value)
+            currentNode.nextNode = new LinkedList.Node(value)
             this.tail = currentNode.nextNode
             this.nodeCount++
         }
@@ -23,11 +29,11 @@ class LinkedList {
     }
     prepend(value) {
         if (this.nodeCount === 0) {
-            this.nodes = new Node(value)
+            this.nodes = new LinkedList.Node(value)
             this.head = this.nodes
             this.nodeCount++
         } else {
-            this.nodes = new Node(value, this.head)
+            this.nodes = new LinkedList.Node(value, this.head)
             let currentNode = this.nodes
             currentNode.nextNode = this.head
             this.head = currentNode
@@ -112,14 +118,21 @@ class LinkedList {
         let currentNode = this.nodes
         let prevCopy = {}
         let iteration = 0
+        let countIncrease = 0
         for (let i = 0; i < this.nodeCount + 1; i++) {
             if (i === index) {
                 for (let j = values.length - 1; j >= 0; j--) {
-                    currentNode = new Node(values[j], currentNode)
+                    currentNode = new LinkedList.Node(values[j], currentNode)
                     this.nodeCount++
+                    countIncrease++
+                }
+                if (i === 0) {
+                    this.head = currentNode
+                } else if (i === this.nodeCount - countIncrease) {
+                    this.tail = currentNode
                 }
                 for (iteration; iteration > 0; iteration--){
-                    currentNode = new Node(prevCopy.value, currentNode)
+                    currentNode = new LinkedList.Node(prevCopy.value, currentNode)
                     prevCopy = prevCopy.nextNode
                 } 
                 this.nodes = currentNode
@@ -127,25 +140,51 @@ class LinkedList {
             } else {
                 iteration++
                 if (iteration === 1) {
-                    prevCopy = new Node(currentNode.value)
+                    prevCopy = new LinkedList.Node(currentNode.value)
                 } else {
-                    prevCopy = new Node(currentNode.value, prevCopy)
+                    prevCopy = new LinkedList.Node(currentNode.value, prevCopy)
                 }
                 currentNode = currentNode.nextNode
             }
         }
     }
     removeAt(index) {
+        if (index > this.nodeCount || index < 0) {
+            throw new RangeError("Outside the confines of this universe.")
+        }
+        let currentNode = this.nodes
+        let prevCopy = {}
+        let iteration = 0
+        for (let i = 0; i < this.nodeCount + 1; i++) {
+            if (i === index) {
+                const prevValue = prevCopy
+                currentNode = currentNode.nextNode
+                this.nodeCount--
+                for (iteration; iteration > 0; iteration--){
+                    currentNode = new LinkedList.Node(prevCopy.value, currentNode)
+                    prevCopy = prevCopy.nextNode
+                }
+                if (i === 0) {
+                    this.head = currentNode
+                } else if (i === this.nodeCount) {
+                    this.tail = prevValue
+                }
+                this.nodes = currentNode
+                break
+            } else {
+                iteration++
+                if (iteration === 1) {
+                    prevCopy = new LinkedList.Node(currentNode.value)
+                } else {
+                    prevCopy = new LinkedList.Node(currentNode.value, prevCopy)
+                }
+                currentNode = currentNode.nextNode
+            }
+        }
+    }
+}
 
-    }
-}
-class Node {
-    constructor(value, nextNode = null) {
-        this.value = value
-        this.nextNode = nextNode
-    }
-}
-const list = new LinkedList()
+const  list = new LinkedList()
 list.append("My Cat Coco")
 list.append("Me")
 list.append("I")
@@ -154,8 +193,8 @@ list.prepend("I am Steve")
 console.log(list.toString())    
 
 console.log("")
-console.log(`List Size: ${list.size()}`)
-console.log(`Current Head: ${list.getHead()}`)
+console.log(`List size: ${list.size()}`)
+console.log(`Current head: ${list.getHead()}`)
 console.log(`Current tail: ${list.getTail()}`)
 
 console.log("")
@@ -167,30 +206,48 @@ console.log(`List item at index 10: ${list.at(10)}`)
 console.log("")
 list.pop()
 console.log(list.toString())
-console.log(`Current Head: ${list.getHead()}`)
+console.log(`Current head: ${list.getHead()}`)
 console.log(`List contains I?: ${list.contains("I")}`)
 console.log(`List contains Me?: ${list.contains("Me")}`)
 console.log(`Get index of I: ${list.findIndex("I")}`)
 console.log(`Get index of Hello: ${list.findIndex   ("Hello")}`)
 console.log("")
 
-list.insertAt(0, "Hello", "World")
 console.log(`Inserting "Hello" and "World" at index 0:`)
+list.insertAt(0, "Hello", "World")
 console.log(list.toString())
 console.log("")
 
-list.insertAt(1, "Why?")
 console.log(`Inserting "Why? at index 1:`)
+list.insertAt(1, "Why?")
 console.log(list.toString())
 console.log("")
 
-list.insertAt(6, "Goodbye", "World")
 console.log(`Inserting "Goodbye" and "World" at index 6:`)
+list.insertAt(6, "Goodbye", "World")
 console.log(list.toString())
 console.log("")
 
-list.insertAt(9, "E")
 console.log(`Inserting "E" at index 9:`)
+list.insertAt(9, "E")
 console.log(list.toString())
 console.log("")
 
+console.log(`Removing "E" at index 9:`)
+list.removeAt(9)
+console.log(list.toString())
+console.log("")
+
+console.log(`Removing "Hello" at index 0:`)
+list.removeAt(0)
+console.log(list.toString())
+console.log("")
+
+console.log(`Removing "My Cat Coco" at index 3:`)
+list.removeAt(3)
+console.log(list.toString())
+console.log("")
+console.log(`Current Head: ${list.getHead()}`)
+console.log(`Current Tail: ${list.getTail()}`)
+console.log(`List size: ${list.size()}`)
+console.log(`Final Print: ${list.toString()}`)
