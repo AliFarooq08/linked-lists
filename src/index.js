@@ -50,7 +50,7 @@ class LinkedList {
             if (currentNode.nextNode !== null) {
                 currentNode = currentNode.nextNode 
             } else {
-                console.error(`Index must be between 0 and ${this.nodeCount - 1}, but entered ${index}.`)
+                return undefined
             }
         }
         return currentNode.value
@@ -62,6 +62,8 @@ class LinkedList {
         } else {
             let removedNode = this.nodes.value
             this.nodes = this.nodes.nextNode
+            this.head = this.nodes
+            this.nodeCount -= 1
             return this.nodes
         }
         
@@ -69,7 +71,7 @@ class LinkedList {
     contains(value) {
         let currentNode = this.nodes
         let found = false
-        for (let i = 0; i < this.nodeCount - 1; i++) {
+        for (let i = 0; i < this.nodeCount; i++) {
             if (currentNode.value === value && found == false) {
                 found = true
             } else if (found == false) {
@@ -82,7 +84,7 @@ class LinkedList {
         let currentNode = this.nodes
         let found = false
         let index = -1
-        for (let i = 0; i < this.nodeCount - 1; i++) {
+        for (let i = 0; i < this.nodeCount; i++) {
             if (currentNode.value === value & found == false) {
                 index = i 
                 found = true
@@ -104,7 +106,34 @@ class LinkedList {
         return tempString
     }
     insertAt(index, ...values) {
-
+        if (index > this.nodeCount || index < 0) {
+            throw new RangeError("Outside the confines of this universe.")
+        }
+        let currentNode = this.nodes
+        let prevCopy = {}
+        let iteration = 0
+        for (let i = 0; i < this.nodeCount + 1; i++) {
+            if (i === index) {
+                for (let j = values.length - 1; j >= 0; j--) {
+                    currentNode = new Node(values[j], currentNode)
+                    this.nodeCount++
+                }
+                for (iteration; iteration > 0; iteration--){
+                    currentNode = new Node(prevCopy.value, currentNode)
+                    prevCopy = prevCopy.nextNode
+                } 
+                this.nodes = currentNode
+                break
+            } else {
+                iteration++
+                if (iteration === 1) {
+                    prevCopy = new Node(currentNode.value)
+                } else {
+                    prevCopy = new Node(currentNode.value, prevCopy)
+                }
+                currentNode = currentNode.nextNode
+            }
+        }
     }
     removeAt(index) {
 
@@ -123,17 +152,45 @@ list.append("I")
 list.prepend("test")
 list.prepend("I am Steve")
 console.log(list.toString())    
+
 console.log("")
 console.log(`List Size: ${list.size()}`)
 console.log(`Current Head: ${list.getHead()}`)
 console.log(`Current tail: ${list.getTail()}`)
+
 console.log("")
 console.log(`List item at index 0: ${list.at(0)}`)
 console.log(`List item at index 4: ${list.at(4)}`)
 console.log(`List item at index 5: ${list.at(5)}`)
+console.log(`List item at index 10: ${list.at(10)}`)
+
+console.log("")
 list.pop()
 console.log(list.toString())
+console.log(`Current Head: ${list.getHead()}`)
 console.log(`List contains I?: ${list.contains("I")}`)
 console.log(`List contains Me?: ${list.contains("Me")}`)
 console.log(`Get index of I: ${list.findIndex("I")}`)
 console.log(`Get index of Hello: ${list.findIndex   ("Hello")}`)
+console.log("")
+
+list.insertAt(0, "Hello", "World")
+console.log(`Inserting "Hello" and "World" at index 0:`)
+console.log(list.toString())
+console.log("")
+
+list.insertAt(1, "Why?")
+console.log(`Inserting "Why? at index 1:`)
+console.log(list.toString())
+console.log("")
+
+list.insertAt(6, "Goodbye", "World")
+console.log(`Inserting "Goodbye" and "World" at index 6:`)
+console.log(list.toString())
+console.log("")
+
+list.insertAt(9, "E")
+console.log(`Inserting "E" at index 9:`)
+console.log(list.toString())
+console.log("")
+
