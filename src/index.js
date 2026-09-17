@@ -59,46 +59,37 @@ class LinkedList {
                 return undefined
             }
         }
-        return currentNode.value
-        
+        return currentNode.value 
     }
     pop() {
         if (this.nodeCount === 0) {
             return undefined
         } else {
-            let removedNode = this.nodes.value
             this.nodes = this.nodes.nextNode
             this.head = this.nodes
             this.nodeCount -= 1
             return this.nodes
-        }
-        
+        } 
     }
     contains(value) {
         let currentNode = this.nodes
-        let found = false
         for (let i = 0; i < this.nodeCount; i++) {
-            if (currentNode.value === value && found == false) {
-                found = true
-            } else if (found == false) {
-                currentNode = currentNode.nextNode
+            if (currentNode.value === value) {
+                return true
             }
+            currentNode = currentNode.nextNode
         }
-        return found
+        return false
     }
     findIndex(value) {
         let currentNode = this.nodes
-        let found = false
-        let index = -1
-        for (let i = 0; i < this.nodeCount; i++) {
-            if (currentNode.value === value & found == false) {
-                index = i 
-                found = true
-            } else if (found == false) {
-                currentNode = currentNode.nextNode
+        for (let index = 0; index < this.nodeCount; index++) {
+            if (currentNode.value === value) {
+                return index
             }
+            currentNode = currentNode.nextNode
         }
-        return index
+        return -1
     }
     toString() {
         let tempString = ``
@@ -107,13 +98,11 @@ class LinkedList {
             tempString += `(${currentNode.value}) -> `
             currentNode = currentNode.nextNode
         }
-        tempString += "(null)"
-
-        return tempString
+        return tempString += "(null)"
     }
     insertAt(index, ...values) {
         if (index > this.nodeCount || index < 0) {
-            throw new RangeError("Outside the confines of this universe.")
+            throw new RangeError("Outside linked list range.")
         }
         let currentNode = this.nodes
         let prevCopy = {}
@@ -134,7 +123,7 @@ class LinkedList {
                 for (iteration; iteration > 0; iteration--){
                     currentNode = new LinkedList.Node(prevCopy.value, currentNode)
                     prevCopy = prevCopy.nextNode
-                } 
+                }
                 this.nodes = currentNode
                 break
             } else {
@@ -183,71 +172,4 @@ class LinkedList {
         }
     }
 }
-
-const  list = new LinkedList()
-list.append("My Cat Coco")
-list.append("Me")
-list.append("I")
-list.prepend("test")
-list.prepend("I am Steve")
-console.log(list.toString())    
-
-console.log("")
-console.log(`List size: ${list.size()}`)
-console.log(`Current head: ${list.getHead()}`)
-console.log(`Current tail: ${list.getTail()}`)
-
-console.log("")
-console.log(`List item at index 0: ${list.at(0)}`)
-console.log(`List item at index 4: ${list.at(4)}`)
-console.log(`List item at index 5: ${list.at(5)}`)
-console.log(`List item at index 10: ${list.at(10)}`)
-
-console.log("")
-list.pop()
-console.log(list.toString())
-console.log(`Current head: ${list.getHead()}`)
-console.log(`List contains I?: ${list.contains("I")}`)
-console.log(`List contains Me?: ${list.contains("Me")}`)
-console.log(`Get index of I: ${list.findIndex("I")}`)
-console.log(`Get index of Hello: ${list.findIndex   ("Hello")}`)
-console.log("")
-
-console.log(`Inserting "Hello" and "World" at index 0:`)
-list.insertAt(0, "Hello", "World")
-console.log(list.toString())
-console.log("")
-
-console.log(`Inserting "Why? at index 1:`)
-list.insertAt(1, "Why?")
-console.log(list.toString())
-console.log("")
-
-console.log(`Inserting "Goodbye" and "World" at index 6:`)
-list.insertAt(6, "Goodbye", "World")
-console.log(list.toString())
-console.log("")
-
-console.log(`Inserting "E" at index 9:`)
-list.insertAt(9, "E")
-console.log(list.toString())
-console.log("")
-
-console.log(`Removing "E" at index 9:`)
-list.removeAt(9)
-console.log(list.toString())
-console.log("")
-
-console.log(`Removing "Hello" at index 0:`)
-list.removeAt(0)
-console.log(list.toString())
-console.log("")
-
-console.log(`Removing "My Cat Coco" at index 3:`)
-list.removeAt(3)
-console.log(list.toString())
-console.log("")
-console.log(`Current Head: ${list.getHead()}`)
-console.log(`Current Tail: ${list.getTail()}`)
-console.log(`List size: ${list.size()}`)
-console.log(`Final Print: ${list.toString()}`)
+export { LinkedList }
